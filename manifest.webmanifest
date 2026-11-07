@@ -1,0 +1,11 @@
+{
+  "name": "English Duel",
+  "short_name": "English Duel",
+  "description": "Учим английский и соревнуемся",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#fbf6f1",
+  "theme_color": "#e8556d",
+  "lang": "ru",
+  "icons": [{ "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+}
