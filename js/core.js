@@ -22,8 +22,8 @@ const plural = (n, a, b, c) => { n = Math.abs(n) % 100; const m = n % 10; return
 
 /* ===== пользователи и настройки ===== */
 const USERS = {
-  evgenia: { name: 'Евгения', emoji: '🌸', course: 'Английский с нуля', level: 'A0 → A1+', theme: 'rose' },
-  bogdan: { name: 'Богдан', emoji: '🚀', course: 'Weak A2 → A2+', level: 'A2 → B1', theme: 'sky' }
+  evgenia: { name: 'Евгения', emoji: '🌸', not: 'ещё не начинала', course: 'Английский с нуля', level: 'A0 → A1+', theme: 'rose' },
+  bogdan: { name: 'Богдан', emoji: '🚀', not: 'ещё не начинал', course: 'Weak A2 → A2+', level: 'A2 → B1', theme: 'sky' }
 };
 // Номер сброса прогресса: при увеличении все устройства стирают локальные данные и начинают заново
 const RESET_EPOCH = 1;

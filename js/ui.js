@@ -89,7 +89,7 @@ function homeView(keep) {
   <section class="card">
     <div class="sec-h"><h2>⚔️ Челлендж недели</h2><small class="muted">${fmtD(mon)} – ${fmtD(sun)}</small></div>
     ${ot ? `<a class="vs-mini" href="#/duel"><span><b>${mw}</b> XP<small>${u.name}</small></span><div class="split"><i style="width:${Math.round(100 * mw / Math.max(1, mw + ow))}%"></i></div><span class="r"><b>${ow}</b> XP<small>${V.name}</small></span></a>`
-      : `<a class="vs-mini empty" href="#/settings">Подключи облако, чтобы видеть результаты ${V.name} →</a>`}
+      : `<div class="vs-mini empty">${V.name} ${V.not} — станьте первым в дуэли! ⚔️</div>`}
     <ul class="quests">${quests}</ul>
   </section>
   <div class="row2">
@@ -186,12 +186,12 @@ function duelView() {
   <section class="card vs">
     <div class="pl ${mw > ow ? 'win' : ''}"><span class="av xl">${U.emoji}</span><b>${U.name}</b><div class="xpn">${mw}</div><small>XP за неделю</small></div>
     <div class="vsmid">VS</div>
-    <div class="pl ${ow > mw ? 'win' : ''}"><span class="av xl">${V.emoji}</span><b>${V.name}</b><div class="xpn">${ot ? ow : '—'}</div><small>${ot ? 'XP за неделю' : 'нет данных'}</small></div>
+    <div class="pl ${ow > mw ? 'win' : ''}"><span class="av xl">${V.emoji}</span><b>${V.name}</b><div class="xpn">${ot ? ow : '—'}</div><small>${ot ? 'XP за неделю' : V.not}</small></div>
     <div class="split wide"><i style="width:${Math.round(100 * mw / Math.max(1, mw + ow))}%"></i></div>
-    <p class="lead-t">${ot ? lead : `Данные ${V.name} появятся после подключения облака.`}</p>
+    <p class="lead-t">${ot ? lead : `${V.name} ${V.not} заниматься. Как только появятся результаты, они будут здесь.`}</p>
     <small class="muted">${fmtD(mon)} – ${fmtD(sun)} · итоги подводятся в воскресенье вечером</small>
   </section>
-  ${ot ? '' : `<a class="banner gold" href="#/settings">☁ Подключи синхронизацию в разделе «Ещё», чтобы видеть друг друга с любого устройства →</a>`}
+  
   <section class="card"><div class="sec-h"><h2>Сравнение</h2><small class="muted"><span class="dot a"></span>${U.name} <span class="dot b"></span>${V.name}</small></div>
     <div class="dhead"><b>${U.name}</b><span></span><b>${V.name}</b></div>${rows}</section>
   <section class="card"><h2>Эта неделя по дням</h2><div class="dchart">${days}</div></section>
