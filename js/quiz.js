@@ -37,7 +37,7 @@ function qGram(ex, wi) {
 }
 const buildQuiz = wi => shuffle(W(wi).words).slice(0, 12).map((w, i) => i % 6 === 5 ? qVocabType(w, false) : qVocabMC(w, i % 2 ? 'ru' : 'en'));
 const buildSpell = wi => shuffle(W(wi).words).slice(0, 10).map((w, i) => qVocabType(w, HAS_TTS && i % 4 !== 3));
-const buildGram = wi => shuffle(W(wi).ex).map(e => qGram(e, wi));
+const buildGram = wi => shuffle(W(wi).ex).slice(0, 18).map(e => qGram(e, wi));
 function buildBoss(wi) {
   const ws = shuffle(W(wi).words), ex = shuffle(W(wi).ex);
   const qs = [qVocabMC(ws[0], 'en'), qVocabMC(ws[1], 'ru'), qVocabMC(ws[2], 'en'), qVocabType(ws[3], false), qVocabType(ws[4], HAS_TTS), qVocabType(ws[5], false),

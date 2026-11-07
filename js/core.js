@@ -47,7 +47,7 @@ function course(u = CFG.user) {
         const p = s.indexOf('='); const en = s.slice(0, p).trim(), ru = s.slice(p + 1).trim();
         return { en, ru, k: en.toLowerCase(), w: i };
       });
-      w.ex = w.x.split('\n').map(s => s.trim()).filter(Boolean).map(parseEx);
+      w.ex = [...new Set((w.x + '\n' + (EXTRA[u][i] || '')).split('\n').map(s => s.trim()).filter(Boolean))].map(parseEx);
     });
     c._p = 1;
   }

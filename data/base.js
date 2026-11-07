@@ -8,3 +8,5 @@
 */
 const COURSE_WEEKS = { evgenia: [], bogdan: [] };
 const addWeek = (u, o) => COURSE_WEEKS[u].push(o);
+const EXTRA = { evgenia: [], bogdan: [] };
+const addExtra = (u, arr) => { EXTRA[u] = arr; };
