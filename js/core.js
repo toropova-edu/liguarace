@@ -104,7 +104,15 @@ const gh = (path, o = {}) => fetch(`https://api.github.com/repos/${CFG.repo}/con
 });
 const b64enc = s => { const b = new TextEncoder().encode(s); let x = ''; b.forEach(c => x += String.fromCharCode(c)); return btoa(x); };
 const b64dec = s => new TextDecoder().decode(Uint8Array.from(atob(s.replace(/\s/g, '')), c => c.charCodeAt(0)));
+// прокси на Cloudflare держит токен GitHub у себя — устройствам токен не нужен
+const API = 'https://english-duel-progress.glossa-788695.workers.dev';
 async function fetchRemote(user) {
+  if (!CFG.token) {
+    const r = await fetch(`${API}/progress/${user}`, { cache: 'no-store' });
+    if (r.status === 404) return { data: null, sha: null };
+    if (!r.ok) throw new Error('Сервер сохранения недоступен (' + r.status + ')');
+    return { data: await r.json(), sha: 'proxy' };
+  }
   const r = await gh(`data/progress/${user}.json?ref=${encodeURIComponent(CFG.branch)}&t=${now()}`);
   if (r.status === 404) return { data: null, sha: null };
   if (!r.ok) throw new Error(r.status === 403 ? 'Лимит запросов GitHub, попробуйте позже' : 'GitHub ответил ' + r.status);
@@ -113,13 +121,18 @@ async function fetchRemote(user) {
 }
 async function sync() {
   clearTimeout(syncTimer);
-  if (!CFG.repo || !CFG.user) { SYNC = { state: 'off', msg: 'Только это устройство' }; onSync(); return; }
+  if (!CFG.user) { SYNC = { state: 'off', msg: 'Только это устройство' }; onSync(); return; }
   SYNC = { state: 'busy', msg: 'Синхронизация…' }; onSync();
   try {
     for (let attempt = 0; attempt < 2; attempt++) {
       const { data, sha } = await fetchRemote(CFG.user);
       ME = merge(ME, data); save('ep_data_' + CFG.user, ME);
-      if (CFG.token && (isDirty() || !sha)) {
+      if (!CFG.token && isDirty()) {
+        save('ep_dirty_' + CFG.user, false);
+        const r = await fetch(`${API}/progress/${CFG.user}`, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(ME) });
+        if (!r.ok) { save('ep_dirty_' + CFG.user, true); throw new Error('Не удалось сохранить (' + r.status + ')'); }
+        ME = merge(ME, await r.json()); save('ep_data_' + CFG.user, ME);
+      } else if (CFG.token && (isDirty() || !sha)) {
         save('ep_dirty_' + CFG.user, false);
         const r = await gh(`data/progress/${CFG.user}.json`, {
           method: 'PUT',
@@ -131,7 +144,7 @@ async function sync() {
       break;
     }
     try { const o = await fetchRemote(otherUser()); if (o.data) { OTHER = o.data; save('ep_other_' + otherUser(), OTHER); } } catch (e) { }
-    SYNC = { state: CFG.token ? 'ok' : 'ro', msg: CFG.token ? 'Сохранено в облаке' : 'Только чтение (нет токена)', t: now() };
+    SYNC = { state: 'ok', msg: 'Сохранено в облаке', t: now() };
   } catch (e) { SYNC = { state: 'err', msg: e.message || 'Ошибка сети' }; }
   onSync();
 }

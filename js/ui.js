@@ -216,16 +216,13 @@ function settingsView() {
   setView(`<h1 class="ph1">⚙️ Ещё</h1>
   <section class="card"><div class="sec-h"><h2>Профиль</h2></div><div class="prow"><span class="av">${u.emoji}</span><b>${u.name}</b><small class="muted">${u.course}</small><button class="btn ghost sm" data-act="switch">Сменить</button></div></section>
   <section class="card"><div class="sec-h"><h2>☁ Облако (GitHub)</h2><span class="sync-pill ${SYNC.state}" id="syncmsg">${esc(SYNC.msg)}</span></div>
-    <p class="muted small">Прогресс хранится в вашем репозитории (<code>data/progress/*.json</code>) и подтягивается на любом устройстве.</p>
-    <label>Репозиторий <input id="f-repo" class="ans" placeholder="логин/название-репозитория" value="${esc(CFG.repo)}" autocomplete="off"></label>
-    <label>Ветка <input id="f-br" class="ans" value="${esc(CFG.branch)}" autocomplete="off"></label>
-    <label>Токен (для записи) <input id="f-tok" class="ans" type="password" placeholder="github_pat_…" value="${esc(CFG.token)}" autocomplete="off"></label>
-    <div class="rb"><button class="btn primary" data-act="savecloud">Сохранить и синхронизировать</button></div>
-    <details class="how"><summary>Как это настроить (один раз)</summary><ol>
-      <li>Загрузите папку приложения в репозиторий на GitHub и включите <b>Pages</b> (Settings → Pages → Deploy from branch).</li>
-      <li>Создайте токен: GitHub → Settings → Developer settings → <b>Fine-grained tokens</b>. Доступ — только к этому репозиторию, право <b>Contents: Read and write</b>.</li>
-      <li>На каждом устройстве введите репозиторий и токен здесь. Токен хранится только в этом браузере и никуда не отправляется, кроме GitHub.</li>
-      <li>Без токена приложение только читает данные: прогресс соперника виден, но свой не сохраняется в облаке.</li></ol></details></section>
+    <p class="muted small">Прогресс автоматически сохраняется в репозиторий (<code>data/progress/*.json</code>) и доступен на любом устройстве. Ничего вводить не нужно.</p>
+    <div class="rb"><button class="btn primary" data-act="refresh">↻ Синхронизировать сейчас</button></div>
+    <details class="how"><summary>Свой токен GitHub (необязательно)</summary>
+      <label>Репозиторий <input id="f-repo" class="ans" value="${esc(CFG.repo)}" autocomplete="off"></label>
+      <label>Ветка <input id="f-br" class="ans" value="${esc(CFG.branch)}" autocomplete="off"></label>
+      <label>Токен <input id="f-tok" class="ans" type="password" placeholder="пусто = через общий сервер" value="${esc(CFG.token)}" autocomplete="off"></label>
+      <div class="rb"><button class="btn ghost" data-act="savecloud">Сохранить</button></div></details></section>
   <section class="card"><h2>Настройки</h2>
     <label class="sw"><span>Звуки</span><input type="checkbox" data-act="toggle" data-k="sound" ${CFG.sound ? 'checked' : ''}></label>
     <label class="sw"><span>Режим учителя: открыть все недели</span><input type="checkbox" data-act="toggle" data-k="teacher" ${CFG.teacher ? 'checked' : ''}></label>
