@@ -37,6 +37,8 @@ function qGram(ex, wi) {
 }
 const buildQuiz = wi => shuffle(W(wi).words).slice(0, 12).map((w, i) => i % 6 === 5 ? qVocabType(w, false) : qVocabMC(w, i % 2 ? 'ru' : 'en'));
 const buildSpell = wi => shuffle(W(wi).words).slice(0, 10).map((w, i) => qVocabType(w, HAS_TTS && i % 4 !== 3));
+const buildGram2 = wi => { const ex = shuffle(W(wi).ex), prod = ex.filter(e => e.t !== 'c'), rest = ex.filter(e => e.t === 'c');
+  return prod.concat(rest).slice(0, 18).map(e => qGram(e, wi)); };
 const buildGram = wi => shuffle(W(wi).ex).slice(0, 18).map(e => qGram(e, wi));
 function buildBoss(wi) {
   const ws = shuffle(W(wi).words), ex = shuffle(W(wi).ex);
@@ -66,7 +68,7 @@ function startTask(wi, id) {
   if (id === 'learn') return startLearn(wi);
   const wk = W(wi);
   if (id === 'gram') return showLesson(wi, true);
-  const qs = id === 'quiz' ? buildQuiz(wi) : id === 'spell' ? buildSpell(wi) : buildBoss(wi);
+  const qs = id === 'gram2' ? buildGram2(wi) : id === 'quiz' ? buildQuiz(wi) : id === 'spell' ? buildSpell(wi) : buildBoss(wi);
   const t = TASKS.find(x => x.id === id);
   startRun({ ref: tref(wi, id), taskId: id, week: wi, title: t.n + ' · ' + wk.t, qs, back: '#/week/' + wi });
 }

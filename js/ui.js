@@ -75,7 +75,7 @@ function homeView(keep) {
     const state = !weekUnlocked(i) ? 'lock' : bossPassed(i) ? 'done' : i === fr ? 'now' : 'open';
     path += `<a class="node ${state}" href="#/week/${i}"><span class="num">${state === 'done' ? '✓' : state === 'lock' ? '🔒' : i + 1}</span>
       <span class="nbody"><b>${w.e} ${esc(w.t)}</b><small>${esc(w.g)}</small></span>
-      <span class="nstars">${state === 'now' ? '<em>сейчас</em>' : state === 'lock' ? '' : '★ ' + weekStars(i) + '/15'}</span></a>`;
+      <span class="nstars">${state === 'now' ? '<em>сейчас</em>' : state === 'lock' ? '' : '★ ' + weekStars(i) + '/' + TASKS.length * 3}</span></a>`;
   });
   setView(`
   <section class="card hero">
@@ -108,13 +108,13 @@ function weekView(i) {
   const tasks = TASKS.map((T, n) => {
     const locked = T.id === 'boss' && !weekCleared(i), done = taskDone(i, T.id), s = taskStars(i, T.id);
     return `<button class="task${locked ? ' lock' : ''}${done ? ' done' : ''}" data-act="task" data-w="${i}" data-t="${T.id}" ${locked ? 'disabled' : ''}>
-      <span class="te">${locked ? '🔒' : T.e}</span><span class="tb"><b>${n + 1}. ${T.n}</b><small>${locked ? 'Сначала пройди задания 1–4' : T.id === 'gram' ? esc(w.g) : T.d}</small></span>
+      <span class="te">${locked ? '🔒' : T.e}</span><span class="tb"><b>${n + 1}. ${T.n}</b><small>${locked ? 'Сначала пройди задания 1–' + (TASKS.length - 1) : T.id === 'gram' ? esc(w.g) : T.d}</small></span>
       <span class="ts">${T.id === 'learn' ? (done ? '✓' : '') : starsHtml(s)}</span></button>`;
   }).join('');
-  const sp = Math.round(100 * weekStars(i) / 15);
+  const sp = Math.round(100 * weekStars(i) / (TASKS.length * 3));
   setView(`<a class="back" href="#/home">← Путь</a>
   <section class="card whead"><span class="wbig">${w.e}</span><div><small class="muted">Неделя ${i + 1} из ${course().length}</small><h1>${esc(w.t)}</h1><span class="pill">${esc(w.g)}</span></div></section>
-  <div class="wprog"><div class="bar"><i style="width:${sp}%"></i></div><small class="muted">★ ${weekStars(i)} из 15</small></div>
+  <div class="wprog"><div class="bar"><i style="width:${sp}%"></i></div><small class="muted">★ ${weekStars(i)} из ${TASKS.length * 3}</small></div>
   <div class="tasks">${tasks}</div>
   <a class="card linkrow" href="#/lesson/${i}"><span class="te">📘</span><span><b>Урок: ${esc(w.g)}</b><small>Правило и примеры — всегда под рукой</small></span><span class="go">›</span></a>
   <details class="card words"><summary><b>📖 Слова недели</b> <small class="muted">${w.words.length}</small></summary>

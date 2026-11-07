@@ -201,13 +201,14 @@ const TASKS = [
   { id: 'quiz', n: 'Квиз', d: 'Слова: выбери перевод', e: '🎯' },
   { id: 'spell', n: 'Слушай и пиши', d: 'Аудио и правописание', e: '🎧' },
   { id: 'gram', n: 'Грамматика', d: 'Урок и упражнения', e: '🧩' },
+  { id: 'gram2', n: 'Грамматика 2', d: 'Пиши сам: вставь и собери', e: '🧠' },
   { id: 'boss', n: 'Босс недели', d: 'Финальное испытание', e: '🐉' }
 ];
 const tref = (w, t) => w + ':' + t;
 const tstat = (w, t) => ME.tasks[tref(w, t)] || [0, 0, 0, 0];
 const taskStars = (w, t) => tstat(w, t)[0];
 const taskDone = (w, t) => tstat(w, t)[2] > 0 && (t === 'learn' || taskStars(w, t) >= 1);
-const weekCleared = w => TASKS.slice(0, 4).every(t => taskDone(w, t.id));
+const weekCleared = w => TASKS.slice(0, -1).every(t => taskDone(w, t.id));
 const bossPassed = w => taskStars(w, 'boss') >= 1;
 const weekStars = w => TASKS.reduce((s, t) => s + taskStars(w, t.id), 0);
 const weekUnlocked = w => CFG.teacher || w === 0 || bossPassed(w - 1);
