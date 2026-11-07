@@ -52,7 +52,7 @@ function renderTabs(p) {
 /* ===== выбор профиля ===== */
 function pickView() {
   setView(`<div class="pick"><div class="logo">🎓</div><h1>English Duel</h1><p class="muted">Учим английский и соревнуемся. Кто сегодня занимается?</p>
-  ${Object.entries(USERS).map(([id, u]) => `<button class="pcard" data-theme="${u.theme}" data-act="pickuser" data-u="${id}"><span class="av xl">${u.emoji}</span><span><b>${u.name}</b><small>${u.course} · ${u.level}</small></span></button>`).join('')}
+  ${Object.entries(USERS).map(([id, u]) => `<button class="pcard${id === CFG.last ? ' last' : ''}" data-theme="${u.theme}" data-act="pickuser" data-u="${id}"><span class="av xl">${u.emoji}</span><span><b>${u.name}</b><small>${u.course} · ${u.level}</small>${id === CFG.last ? '<em class="lastb">занимался(ась) в прошлый раз</em>' : ''}</span></button>`).join('')}
   </div>`, 'noTabs');
 }
 
@@ -273,8 +273,8 @@ document.addEventListener('click', e => {
     case 'speak': speak(d.t); break;
     case 'sheet': openSheet(d.tab || 'dict'); break;
     case 'closesheet': closeSheet(); break;
-    case 'pickuser': CFG.user = d.u; saveCfg(); loadLocal(); document.body.dataset.theme = USERS[d.u].theme; go('#/home'); sync(); break;
-    case 'switch': CFG.user = null; saveCfg(); route(); break;
+    case 'pickuser': setUser(d.u); loadLocal(); document.body.dataset.theme = USERS[d.u].theme; go('#/home'); sync(); break;
+    case 'switch': setUser(null); route(); break;
     case 'task': startTask(+d.w, d.t); break;
     case 'startgram': startGrammar(+d.w); break;
     case 'review': startReview(); break;

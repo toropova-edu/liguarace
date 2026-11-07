@@ -26,7 +26,11 @@ const USERS = {
   bogdan: { name: 'Богдан', emoji: '🚀', course: 'Weak A2 → A2+', level: 'A2 → B1', theme: 'sky' }
 };
 const CFG = Object.assign({ user: null, repo: '', branch: 'main', token: '', teacher: false, sound: true }, load('ep_cfg', {}));
-const saveCfg = () => save('ep_cfg', CFG);
+// профиль выбирается при каждом новом открытии сайта (в пределах вкладки запоминается)
+CFG.last = CFG.user; CFG.user = null;
+try { CFG.user = sessionStorage.getItem('ep_user') || null; } catch (e) { }
+const saveCfg = () => { const { user, ...rest } = CFG; save('ep_cfg', { ...rest, user: user || CFG.last }); };
+function setUser(u) { CFG.user = u; if (u) CFG.last = u; try { u ? sessionStorage.setItem('ep_user', u) : sessionStorage.removeItem('ep_user'); } catch (e) { } saveCfg(); }
 if (!CFG.repo) {
   CFG.repo = 'toropova-edu/liguarace';
   if (/\.github\.io$/.test(location.hostname) && location.pathname.split('/')[1]) CFG.repo = location.hostname.split('.')[0] + '/' + location.pathname.split('/')[1];

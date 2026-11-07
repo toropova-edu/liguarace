@@ -241,3 +241,4 @@ body.sheet-open{overflow:hidden}
 @media(min-width:720px){#app{padding-top:10px}.qwrap{padding-top:34px}}
 @media(max-width:380px){.ring{width:78px;height:78px}.qtext{font-size:1.4rem}.chip{padding:3px 8px}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+.lastb{display:block;font-style:normal;font-size:.72rem;color:var(--a);font-weight:800;margin-top:2px}.pcard.last{border-color:var(--a)}
