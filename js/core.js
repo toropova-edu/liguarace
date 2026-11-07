@@ -25,6 +25,14 @@ const USERS = {
   evgenia: { name: 'Евгения', emoji: '🌸', course: 'Английский с нуля', level: 'A0 → A1+', theme: 'rose' },
   bogdan: { name: 'Богдан', emoji: '🚀', course: 'Weak A2 → A2+', level: 'A2 → B1', theme: 'sky' }
 };
+// Номер сброса прогресса: при увеличении все устройства стирают локальные данные и начинают заново
+const RESET_EPOCH = 1;
+try {
+  if (load('ep_epoch', 0) !== RESET_EPOCH) {
+    Object.keys(localStorage).filter(k => /^ep_(data|other|dirty)_/.test(k)).forEach(k => localStorage.removeItem(k));
+    save('ep_epoch', RESET_EPOCH);
+  }
+} catch (e) { }
 const CFG = Object.assign({ user: null, repo: '', branch: 'main', token: '', teacher: false, sound: true }, load('ep_cfg', {}));
 // профиль выбирается при каждом новом открытии сайта (в пределах вкладки запоминается)
 CFG.last = CFG.user; CFG.user = null;

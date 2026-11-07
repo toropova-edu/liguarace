@@ -73,6 +73,11 @@ function startTask(wi, id) {
 function startGrammar(wi) {
   startRun({ ref: tref(wi, 'gram'), taskId: 'gram', week: wi, title: 'Грамматика · ' + W(wi).g, qs: buildGram(wi), back: '#/week/' + wi });
 }
+function startGramMix(wi) {
+  const ws = wi != null ? [wi] : course().map((w, i) => i).filter(weekUnlocked);
+  const pool = shuffle(ws.flatMap(i => W(i).ex.map(e => [e, i]))).slice(0, 15);
+  startRun({ ref: 'gmix', title: wi != null ? 'Грамматика · ' + W(wi).g : 'Грамматика: микс тем', qs: pool.map(([e, i]) => qGram(e, i)), back: '#/games', redo: () => startGramMix(wi) });
+}
 function startReview() { startRun({ ref: 'review', title: 'Повторение слов', qs: buildReview(), back: '#/games' }); }
 function startRun(o) {
   S = {
@@ -235,11 +240,11 @@ function finishRun() {
   const pct = Math.round(100 * S.correct / S.total), stars = starsOf(pct);
   let bonus = stars * 10 + (pct === 100 ? 20 : 0), xp = S.xp + bonus, rep = 0;
   if (S.taskId) { const c = tstat(S.week, S.taskId); if (c[2] > 0) { rep = 1; xp = Math.max(5, Math.round(xp * .4)); } }
-  const wasBoss = S.taskId === 'boss' && !bossPassed(S.week), w = S.week, id = S.taskId;
+  const wasBoss = S.taskId === 'boss' && !bossPassed(S.week), w = S.week, id = S.taskId, redo = S.redo;
   finishCommon({
     ref: S.ref, xp, correct: S.correct, total: S.total, hq: S.hq, pct, stars, title: S.title, back: S.back,
     lines: [['Правильных ответов', `${S.correct} из ${S.total}`], ['XP за ответы', S.xp], ['Бонус за звёзды', bonus], ...(rep ? [['Повторное прохождение', '×0.4']] : [])],
-    again: id === 'gram' ? () => startGrammar(w) : id ? () => startTask(w, id) : () => startReview(),
+    again: redo ? redo : id === 'gram' ? () => startGrammar(w) : id ? () => startTask(w, id) : () => startReview(),
     week: S.week, taskId: S.taskId, bossNew: wasBoss && stars >= 1
   });
 }

@@ -155,6 +155,8 @@ function gamesView() {
   const due = dueWords().length, st = stats(ME);
   setView(`<h1 class="ph1">🎮 Игры и повторение</h1>
   <button class="card cta" data-act="review"><span class="te">🔁</span><span><small>Интервальное повторение</small><b>Повторение слов</b><em>${due ? due + ' ' + plural(due, 'слово', 'слова', 'слов') + ' пора повторить' : 'Всё повторено — можно потренироваться ещё'}</em></span><span class="go">▶</span></button>
+ <button class="card cta gram" data-act="gmix" data-w=""><span class="te">🧩</span><span><small>15 вопросов из всех открытых тем</small><b>Грамматика: микс</b><em>Выбор, пропуски, сборка предложений</em></span><span class="go">▶</span></button>
+  ${(() => { const f = frontier(); return `<button class="card cta gram2" data-act="gmix" data-w="${f}"><span class="te">🎯</span><span><small>Тема, которую проходишь сейчас</small><b>${esc(W(f).g)}</b><em>Ещё порция упражнений — без звёзд, но с XP</em></span><span class="go">▶</span></button>`; })()}
   <button class="card cta alt" data-act="pairs" data-w=""><span class="te">🧩</span><span><small>3 раунда по 6 пар</small><b>Пары</b><em>Соедини слово и перевод — на скорость</em></span><span class="go">▶</span></button>
   <button class="card cta alt2" data-act="sheet" data-tab="dict"><span class="te">📖</span><span><small>Всегда под рукой</small><b>Словарь и правила</b><em>Поиск по всем твоим словам и урокам</em></span><span class="go">▶</span></button>
   <section class="card"><h2>Твоя память</h2><div class="statgrid">
@@ -271,6 +273,7 @@ document.addEventListener('click', e => {
     case 'task': startTask(+d.w, d.t); break;
     case 'startgram': startGrammar(+d.w); break;
     case 'review': startReview(); break;
+    case 'gmix': startGramMix(d.w === '' || d.w == null ? null : +d.w); break;
     case 'pairs': startPairs(d.w === '' || d.w == null ? null : +d.w); break;
     case 'redo': if (LAST) LAST.again(); break;
     case 'pick': if (S && S.mode === 'run') answer(+d.i); break;
